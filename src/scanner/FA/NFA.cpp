@@ -1,5 +1,6 @@
 #include <stack>
 #include <queue>
+#include <ostream>
 #include "NFA.h"
 
 
@@ -28,6 +29,7 @@ NFA::NFA(){
     statePool.push_back(std::move(state2));
 }
 
+//开优化后函数功能错误，不知道是哪里ub了
 NFA NFA::CreateNFAFromRegex(const string& suffixPattern){
     const string& s(suffixPattern);//just for short name
     stack<NFA> NFAstack;
@@ -75,11 +77,11 @@ NFA NFA::CreateNFAFromRegex(const string& suffixPattern){
     return NFAstack.top();
 }
 
-NFAState& NFA::Head(){
+NFAState& NFA::Head() const{
     return statePool[head];
 }
 
-NFAState& NFA::Tail(){
+NFAState& NFA::Tail() const{
     return statePool[tail];
 }
 
@@ -87,7 +89,7 @@ void NFAState::AddEpTrans(const NFAState& traget){
     epTrans.insert(traget.state);
 }
 
-NFAState& NFA::operator[](const state_t state){
+NFAState& NFA::operator[](const state_t state) const{
     return statePool[state];
 }
 
@@ -137,4 +139,10 @@ void NFA::Combine(NFA& other){
 
     this->head = n.head;
     this->tail = n.tail;
+}
+
+std::ostream& operator<<(std::ostream& os, const NFA& nfa)
+{
+    os << nfa.head << ' ' << nfa.Head().epTrans << std::endl;
+    return os;
 }

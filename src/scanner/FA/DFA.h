@@ -6,14 +6,16 @@
 struct NFA;
 
 struct DFANode{
-    std::map<char,StateSet> edges;
+    std::map<char,state_t> edges;
     bool isEnd;
 };
 
 struct DFA{
-    std::map<StateSet, DFANode> nodes;
-    StateSet start;
-    DFA(NFA& nfa);
+    std::map<state_t, DFANode> nodes;
+    state_t start;
+    DFA(const NFA& nfa);
+    DFA() = delete;
+    unsigned Match(const std::string& txt) const;
 
     friend std::ostream& operator<<(std::ostream& os, const DFA& dfa);
 };

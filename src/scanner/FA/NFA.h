@@ -16,7 +16,8 @@ struct NFAState{
     void AddEpTrans(const NFAState& traget);
 };
 
-class NFA{
+struct NFA{
+private:
     static state_t nxt_state;
     static std::vector<NFAState> statePool;
 
@@ -24,9 +25,9 @@ public:
     static NFA CreateNFAFromRegex(const std::string& suffixPattern);
 
     state_t head,tail;
-    NFAState& Head();
-    NFAState& Tail();
-    NFAState& operator[](const state_t state);
+    NFAState& Head() const;
+    NFAState& Tail() const;
+    NFAState& operator[](const state_t state) const;
 
     void Combine(NFA&);
 
@@ -36,4 +37,7 @@ public:
     explicit NFA(const char input);
 
     NFA();
+
+    friend std::ostream& operator<<(std::ostream& os, const NFA& nfa);
 };
+std::ostream& operator<<(std::ostream& os, const NFA& nfa);

@@ -1,5 +1,3 @@
-<mmmm>:=(a|b)*abb
-
 <keyword>:=if
 <keyword>:=while
 <keyword>:=for

@@ -6,11 +6,11 @@ set_rundir(".")
 
 target("scanner")
     set_kind("binary")
-    add_files("src/Grammar.cpp")
-    add_files("src/main.cpp")
-    add_files("src/FA/NFA.cpp")
-    add_files("src/FA/DFA.cpp")
-    add_files("src/FA/FA.cpp")
+    add_files("src/scanner/Grammar.cpp")
+    add_files("src/scanner/main.cpp")
+    add_files("src/scanner/FA/NFA.cpp")
+    add_files("src/scanner/FA/DFA.cpp")
+    add_files("src/scanner/FA/FA.cpp")
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
 --

@@ -114,7 +114,7 @@ void Grammar::HandleXor(){
                 }
             }
             tmp.pop_back();
-            pattern.replace(i, (pattern[i+1]=='\\'?2:1), tmp);
+            pattern.replace(i, (pattern[i+1]=='\\'?3:2), tmp);
         }
     }
 }

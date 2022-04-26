@@ -1,0 +1,15 @@
+int main(const int a)
+{
+  for(int i;i<1){
+    a=0.233E-7;
+    continue;
+  }
+  k+=int;
+  _str="sdfs";
+  while(k<5)
+  {
+      break;
+  }
+  p=10+12i;
+  return 0;
+}
