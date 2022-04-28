@@ -1,11 +1,11 @@
 int main(const int a)
 {
-  for(int i;i<1){
-    a=0.233E-7;
+  for(register int i;i<1 || i&1;++i){
+    a=+233.666E-7;
     continue;
   }
-  k+=int;
-  _str="sdfs";
+  k == int[6];
+  _str="114514 aBc(*";
   while(k<5)
   {
       break;

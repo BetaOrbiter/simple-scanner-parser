@@ -143,22 +143,34 @@ void Grammar::AddConcatenation(){
 }
 
 int Grammar::Priority(const char ch){
+    if (ch == '+')
+    {
+        return 6;
+    }
+    if (ch == '?')
+    {
+        return 5;
+    }
     if(ch == '*')
     {
-        return 3;
+        return 4;
     }
     if(ch == '&')
     {
-        return 2;
+        return 3;
     }
         
     if(ch == '|')
     {
+        return 2;
+    }
+    if (ch == '(')
+    {
         return 1;
     }
-    
-    if(ch == '(' || ch == '[')
+    if(ch == '[')
     {
         return 0;
     }
+    return -1;
 }

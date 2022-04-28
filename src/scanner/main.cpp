@@ -35,13 +35,11 @@ static void BuildDFA(const string_view grammarFile){
             else
                 mm[g.tokenType].Combine(m);
         }
-        //if (i++ == 0)
-        //    break;
     }
     txt.close();
 
     for (const auto &i : mm)
-        dfas.emplace_back(i.first, DFA(i.second));
+        dfas.emplace_back(i.first, i.second);
     for (int i = 0; i < dfas.size(); ++i)
         if (dfas[i].first == "identifier") {
             dfas[i].swap(dfas.back());
@@ -51,7 +49,6 @@ static void BuildDFA(const string_view grammarFile){
 
 int main(void){
     BuildDFA("lex.txt");
-    //std::cout << dfas.at("mmmmm") << std::endl;
     ifstream source("source.c--");
     ofstream out("token.txt");
     string txtLine;
@@ -60,17 +57,23 @@ int main(void){
             //删除前导0
             txtLine.erase(0, txtLine.find_first_not_of(' '));
 
+            int best_match_index = -1;
             unsigned token_len = 0;
-            auto iter = dfas.cbegin();
-            for(;iter!=dfas.cend(); ++iter)
-                if((token_len=iter->second.Match(txtLine)) != 0)
-                    break;
-            
-            if(token_len == 0){
+            for(int i=0;i+1 < dfas.size() ;++i){
+                const unsigned now_match_len = dfas.at(i).second.Match(txtLine);
+                if(now_match_len > token_len){
+                    token_len = now_match_len;
+                    best_match_index = i;
+                }
+            }
+            if(best_match_index == -1)
+                if((token_len = dfas.back().second.Match(txtLine)) > 0)
+                    best_match_index = dfas.size() - 1;
+            if(best_match_index == -1){
                 out << "error in line " << line << std::endl;
                 exit(1);
             }else{
-                out << line << ' ' << iter->first << " " << txtLine.substr(0, token_len) << endl;
+                out << line << ' ' << dfas.at(best_match_index).first << " " << txtLine.substr(0, token_len) << endl;
                 txtLine.erase(0, token_len);
             }
         }while(!txtLine.empty());
