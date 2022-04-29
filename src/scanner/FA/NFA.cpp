@@ -32,22 +32,22 @@ NFA::NFA(){
 //开优化后函数功能错误，不知道是哪里ub了
 NFA NFA::CreateNFAFromRegex(const string& suffixPattern){
     const string& s(suffixPattern);//just for short name
-    stack<NFA> NFAstack;
+    stack<NFA> nfa_stack;
 
     for(string::size_type i=0;i<s.size(); ++i){
         if(controls.find(s[i])==string::npos)
-            NFAstack.emplace(s[i]);
+            nfa_stack.emplace(s[i]);
         else if(s[i]=='\\')
-            NFAstack.emplace(s[++i]);
+            nfa_stack.emplace(s[++i]);
         else if(s[i]=='*'){
-            NFA n(NFAstack.top());
+            NFA n(nfa_stack.top());
             n.Head().AddEpTrans(n.Tail());
             n.Tail().AddEpTrans(n.Head());
         }else if(s[i]=='|'){
-            NFA n1(NFAstack.top());
-            NFAstack.pop();
-            NFA n2(NFAstack.top());
-            NFAstack.pop();
+            NFA n1(nfa_stack.top());
+            nfa_stack.pop();
+            NFA n2(nfa_stack.top());
+            nfa_stack.pop();
             NFA n;
 
             n.Head().AddEpTrans(n1.Head());
@@ -55,26 +55,26 @@ NFA NFA::CreateNFAFromRegex(const string& suffixPattern){
             n1.Tail().AddEpTrans(n.Tail());
             n2.Tail().AddEpTrans(n.Tail());
 
-            NFAstack.push(std::move(n));
+            nfa_stack.push(std::move(n));
         }else if(s[i] == '&'){
-            NFA n2(NFAstack.top());
-            NFAstack.pop();
-            NFA n1(NFAstack.top());
-            NFAstack.pop();
+            NFA n2(nfa_stack.top());
+            nfa_stack.pop();
+            NFA n1(nfa_stack.top());
+            nfa_stack.pop();
 
             n1.Tail().AddEpTrans(n2.Head());
             n1.tail = n2.tail;
-            NFAstack.push(std::move(n1));
+            nfa_stack.push(std::move(n1));
         }else if(s[i] == '+'){
-            NFA n(NFAstack.top());
+            NFA n(nfa_stack.top());
             n.Tail().AddEpTrans(n.Head());
         }else if(s[i] == '?'){
-            NFA n(NFAstack.top());
+            NFA n(nfa_stack.top());
             n.Head().AddEpTrans(n.Tail());
         }
     }
 
-    return NFAstack.top();
+    return nfa_stack.top();
 }
 
 NFAState& NFA::Head() const{
