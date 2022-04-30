@@ -11,6 +11,9 @@ target("scanner")
     add_files("src/scanner/FA/NFA.cpp")
     add_files("src/scanner/FA/DFA.cpp")
     add_files("src/scanner/FA/FA.cpp")
+target("parser")
+    set_kind("binary")
+    add_files("src/parser/*.cpp")
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
 --
