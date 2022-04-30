@@ -7,7 +7,7 @@ using std::unordered_set;
 
 void State::ToClosure(){
     queue<Item> que;
-    for(const auto &i:data)
+    for(const auto &i:items)
         if(!i.IsReachLast())//dot到最后直接跳过
             if(i.IsNextNoTerminal())
                 que.push(i);
@@ -15,8 +15,8 @@ void State::ToClosure(){
     while(!que.empty()){
         Item now(std::move(que.front()));
         que.pop();
-        if(!data.contains(now))
-            data.insert(now);
+        if(!items.contains(now))
+            items.insert(now);
         if(now.IsReachLast()||!now.IsNextNoTerminal())
             continue;
         unordered_set<Element> first_set(now.GetFirst());
@@ -32,8 +32,8 @@ void State::ToClosure(){
                 continue;
             for(const auto &new_lookahead:first_set){
                 Item new_item(p_idx, 0, new_lookahead);
-                if(!data.contains(new_item)){
-                    data.insert(new_item);
+                if(!items.contains(new_item)){
+                    items.insert(new_item);
                     que.push(new_item);
                 }
             }

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <unordered_set>
-#include <memory>
 #include "Token.h"
 //句法的基本单元
 struct Element{
@@ -12,7 +11,7 @@ struct Element{
     static const Element emptyElement;    
     static const Element endElement;
     Kind kind;
-    std::string value;    //词法分析输出token值,或非终结符名字
+    std::string value;
 
     Element(const std::string& v);
     Element(const Kind k, const std::string& v);

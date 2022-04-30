@@ -99,10 +99,12 @@ void Project::EmplaceSubFirst(const Element& e, vector<Element>& path, unordered
             //环形依赖，已经求出可空时继续下一步,否则直接回溯
             auto i = std::find(path.cbegin(), path.cend(), r);
             if(i != path.cend())
-                if(first[i->value].contains(Element::emptyElement))
+                if(first[*i].contains(Element::emptyElement))
                     continue;
-                else
+                else{
+                    now_empty_flg = false;
                     break;
+                }
 
             EmplaceSubFirst(r, path, vis);
             auto r_first = first.at(r);
