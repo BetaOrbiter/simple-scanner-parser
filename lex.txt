@@ -16,11 +16,13 @@
 <type>:=string
 <type>:=enum
 
-<binary_operation>:=(\+|\-|\*|/|%|\&|\||\^|<|>|=)=?
+<binary_operation>:=(\+|\-|\*|/|%|\&|\||\^|<|>|=)
 <binary_operation>:=\|\|
 <binary_operation>:=\&\&
-<binary_operation>:==
-<binary_operation>:=
+<binary_operation>:===
+
+<assignment_operator>:=(\+|\-|\*|/|%|\&|\||\^|<|>)=
+<assignment_operator>:==
 
 <unary_operation>:=\+\+?
 <unary_operation>:=\-\-?

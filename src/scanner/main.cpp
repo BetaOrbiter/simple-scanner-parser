@@ -52,7 +52,8 @@ int main(void){
     ifstream source("source.c--");
     ofstream out("token.txt");
     string txt_line;
-    for(unsigned line=1; getline(source, txt_line); ++line){
+    unsigned line;
+    for(line=1; getline(source, txt_line); ++line){
         do{
             //删除前导0
             txt_line.erase(0, txt_line.find_first_not_of(' '));
@@ -78,5 +79,10 @@ int main(void){
             }
         }while(!txt_line.empty());
     }
+    out << line << " end $";
+
+    ofstream dfa_file("scanner_dfa.txt");
+    for(const auto&dfa:dfas)
+        dfa_file << "dfa:" << dfa.first << endl << dfa.second << endl;
     return 0;
 }

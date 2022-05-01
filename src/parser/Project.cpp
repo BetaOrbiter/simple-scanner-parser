@@ -146,6 +146,6 @@ bool Project::CanEmpty(const Element& e){
 std::ostream& operator<<(std::ostream& os, const Project& proj){
     os << proj.left << ":=";
     for(const auto&e:proj.right)
-        os << e;
+        os << e << ' ';
     return os;
 }

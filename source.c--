@@ -1,15 +1,18 @@
-int main(const int a)
+int main(const int a, double b)
 {
-  for(register int i;i<1 || i&1;++i){
-    a=+233.666E-7;
-    continue;
-  }
-  k == int[6];
-  _str="114514 aBc(*";
-  while(k<5)
-  {
-      break;
-  }
-  p=10+12i;
-  return 0;
+    int a = 5;
+    const bool b = (+0.233E-7*5+x);
+    if("114514sdkl &*34" + 233.666+59i){
+        if(b){
+            _str += 9;
+            while(_str + b){
+                for(int i=0;i<4;i+=4){
+                    main(a, _str);
+                    a += (2*3);
+                }
+                continue;
+            }
+            return -233.666+59i*_str;
+        }
+    }
 }

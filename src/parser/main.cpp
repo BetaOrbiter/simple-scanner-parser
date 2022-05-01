@@ -74,7 +74,8 @@ static void PrintTable(std::ostream& os){
     form.append(std::to_string(column_len));
     form.push_back('}');
 
-    //表头
+    //goto表
+    os << "goto table" << endl;
     os << format(form, "state");
     for(const auto&e:Element::terminalSet)
         os << format(form, e.value);
@@ -92,6 +93,17 @@ static void PrintTable(std::ostream& os){
             else
                 os << format(form, n);
         }
+        os << endl;
+    }
+
+    //action表
+    os << "action table" << endl;
+    os << format(form, "state") << endl;
+    for(int i=0;i<actionTable.size();++i){
+        os << format(form, i);
+        os << format(form, actionTable.at(i).first==shift?"shitf":"reduce");
+        if(actionTable.at(i).first==reduce)
+            os << Project::pool[actionTable.at(i).second];
         os << endl;
     }
 }
@@ -173,11 +185,13 @@ int main(void){
     BuildTable(dfa);
 
     //输出自动机、表    
-    // cout << dfa << std::endl;
-    std::ofstream goto_file("goto_table.txt");
+    std::ofstream dfa_file("paser_dfa.txt");
+    dfa_file << dfa << std::endl;
+    std::ofstream goto_file("action_goto_table.txt");
     PrintTable(goto_file);
 
     //解析
-    cout << (Parse("token.txt", dfa.start, cout)?"acc":"err") << endl;
+    std::ofstream process_file("process.txt");
+    process_file << (Parse("token.txt", dfa.start, process_file)?"acc":"err") << endl;
     return 0;
 }
