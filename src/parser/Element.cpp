@@ -39,10 +39,7 @@ Element::Element(const string& v){
 Element::Element(const Kind k, const string& v)
     :kind(k),value(v)    
 {
-    if(k==noTerminal)
-        noTerminalSet.emplace(*this);
-    else
-        terminalSet.emplace(*this);
+
 }
 
 bool Element::operator==(const Token& t)const{
@@ -55,7 +52,7 @@ bool Element::operator==(const Token& t)const{
     else if(kind == empty)
         return false;
     else if(kind == end)
-        return t.type=="end" && t.type=="$";
+        return t.type=="end" && t.value=="$";
     return false;
 };
 

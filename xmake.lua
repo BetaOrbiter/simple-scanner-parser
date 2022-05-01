@@ -1,6 +1,6 @@
 set_project("编译原理课设")
 add_rules("mode.debug", "mode.release")
-set_languages("cxx20")
+set_languages("cxxlatest")
 add_cxxflags("/utf-8")
 set_rundir(".")
 

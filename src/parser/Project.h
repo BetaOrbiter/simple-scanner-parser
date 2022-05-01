@@ -6,7 +6,7 @@
 //句法类
 struct Project{
     //句法句柄类型，使用者持有，由pool获取实例
-    using project_t = size_t;
+    using project_t = unsigned;
     //句法池，使用者由此获取句法
     static std::vector<Project> pool;
 

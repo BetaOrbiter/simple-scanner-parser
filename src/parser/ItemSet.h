@@ -2,19 +2,19 @@
 #include <unordered_set>
 #include "Item.h"
 
-struct State{
+struct ItemSet{
     std::unordered_set<Item> items;
 
     void ToClosure();
-    bool operator==(const State& i)const{
+    bool operator==(const ItemSet& i)const{
         return i.items == items;
     }
 };
 namespace std {
     template <>
-    struct hash<State>
+    struct hash<ItemSet>
     {
-        size_t operator()(const State & e) const
+        size_t operator()(const ItemSet & e) const
         {
             size_t ret=0;
             for(const auto& i:e.items)

@@ -1,11 +1,12 @@
 #include <queue>
 #include <unordered_set>
-#include "State.h"
+#include "ItemSet.h"
+
 
 using std::queue;
 using std::unordered_set;
 
-void State::ToClosure(){
+void ItemSet::ToClosure(){
     queue<Item> que;
     for(const auto &i:items)
         if(!i.IsReachLast())//dot到最后直接跳过

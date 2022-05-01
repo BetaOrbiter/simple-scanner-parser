@@ -4,7 +4,7 @@
 #include <queue>
 #include <ostream>
 #include "DFA.h"
-#include "State.h"
+#include "ItemSet.h"
 
 using std::unordered_map;
 using std::unordered_set;
@@ -12,20 +12,20 @@ using std::vector;
 using std::queue;
 
 DFA::DFA(const Item& start_item){
-    State start_state;
+    ItemSet start_state;
     start_state.items.insert(start_item);
     start_state.ToClosure();
 
     state_t nxt_state_num=0;
-    queue<State> que;//待处理状态队列
-    unordered_map<State, state_t> toNum;//已出现的状态
+    queue<ItemSet> que;//待处理状态队列
+    unordered_map<ItemSet, state_t> toNum;//已出现的状态
     toNum[start_state] = nxt_state_num;
     this->start = nxt_state_num++;
     que.push(std::move(start_state));
     //this->nodes表示以处理完成的状态
 
     while(!que.empty()){
-        State now;
+        ItemSet now;
         std::swap(now, que.front());
         que.pop();
         if(this->nodes.contains(toNum.at(now)))
@@ -39,7 +39,7 @@ DFA::DFA(const Item& start_item){
         
         for(const auto&e:trans){
             //构造该符号转移的新状态
-            State new_state;
+            ItemSet new_state;
             for(const auto&i:e.second){
                 new_state.items.emplace(i.projectIdx, i.dotPos+1, i.lookAhead);
             }
@@ -52,8 +52,23 @@ DFA::DFA(const Item& start_item){
             }
             nodes[toNum.at(now)].edges[e.first]=toNum.at(new_state);
         }
-        nodes[toNum.at(now)].items =std::move(now.items);
+        const state_t tmp = toNum.at(now);
+        nodes[tmp].items =std::move(now.items);
+        nodes[tmp].SetKind();
     }
+}
+
+void DFANode::SetKind(){
+    if(!edges.empty()){
+        action = shift;
+        return;
+    }
+    action = reduce;
+    for(const auto&i:items)
+        if(i.IsReachLast()){
+            hand = i.projectIdx;
+            return;
+        }
 }
 
 using std::endl;

@@ -16,14 +16,16 @@ struct Element{
 
     //由输入的句法正则式构造
     Element(const std::string& v);
-    //直接构造
-    Element(const Kind k, const std::string& v);
     bool operator==(const Element& e) const{
         return (this->kind==e.kind)&&(this->value==e.value);
     }
     bool operator==(const Token& t) const;//与scanner输出的token比较
     
     friend std::ostream& operator<<(std::ostream& os, const Element& e);
+
+private:
+    //直接构造,专属于特殊空和终结元素
+    Element(const Kind k, const std::string& v);
 };
 namespace std {
     template <>
