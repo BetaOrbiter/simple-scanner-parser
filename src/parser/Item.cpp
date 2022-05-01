@@ -4,25 +4,31 @@
 using std::unordered_set;
 
 bool Item::IsNextNoTerminal()const{
-    return Project::pool[projectIdx].right[dotPos].kind == Element::noTerminal;
+    return this->GetProject().right[dotPos].kind == Element::noTerminal;
 }
 const Element& Item::GetNextElement()const{
-    return Project::pool[projectIdx].right[dotPos];
+    return this->GetProject().right[dotPos];
 }
 unordered_set<Element> Item::GetFirst()const{
-    const auto& proj = Project::pool[projectIdx];
-    if(proj.right.size() == dotPos+1)
+    const auto& proj = this->GetProject();
+    //如活前缀已达最后,特殊处理
+    if(proj.right.size() <= dotPos+1)
         return unordered_set<Element>{lookAhead};
     
     unordered_set<Element> ret;
     size_t pos = dotPos+1;
+    //依次处理每一个符号
     for(;pos<proj.right.size(); ++pos){
+        //非终结符直接返回
         if(proj.right[pos].kind != Element::noTerminal){
             ret.insert(proj.right[pos]);
             break;
         }
+        //终结符合并
         auto ss = Project::first[proj.right[pos]];
+        ss.erase(Element::emptyElement);//注意去除空符号
         ret.merge(std::move(ss));
+        //该终结符无空则停止
         if(!Project::first[proj.right[pos]].contains(Element::emptyElement))
             break;
     }

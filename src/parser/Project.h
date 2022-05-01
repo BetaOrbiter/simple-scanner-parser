@@ -3,12 +3,16 @@
 #include <regex>
 #include <unordered_map>
 #include "Element.h"
-//一条句法
+//句法类
 struct Project{
-    using project_t = size_t; //句法句柄类型
-    static std::vector<Project> pool;//句法池
+    //句法句柄类型，使用者持有，由pool获取实例
+    using project_t = size_t;
+    //句法池，使用者由此获取句法
+    static std::vector<Project> pool;
 
+    //检查line是否是一个合法产生式
     static bool IsValid(const std::string& line);
+    //由line构造一个产生式并加入存储池中
     static project_t Emplace(const std::string& line);
     //获取同左部的所有句法句柄
     static const std::vector<project_t>& getBrother(const project_t p);
@@ -18,13 +22,12 @@ struct Project{
     static bool CanEmpty(const Element& e);
     //该句法是否为空
     static bool IsEmpty(const project_t p);
-    //构造first集合
+    //标记产生式读入完毕，并构造各符号first集
     static void EmplaceFirst();
 
-    Element left;
-    std::vector<Element> right;
+    Element left;//左部
+    std::vector<Element> right;//右部
 
-    Project(const std::string& left,const std::vector<Element>& right);
     //获取同左部的所有句法句柄
     const std::vector<project_t>& getBrother() const;
     //该句法是否为空
@@ -36,6 +39,7 @@ struct Project{
 private:
     const static std::regex projectFormat;
     //快速获取左部相同句法
-    static std::unordered_map<Element,std::vector<project_t>> mm;
+    static std::unordered_map<Element,std::vector<project_t>> fastBro;
+    //构造first集的辅助函数
     static void EmplaceSubFirst(const Element& e, std::vector<Element>& path, std::unordered_set<Element>& vis);
 };

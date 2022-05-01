@@ -1,3 +1,4 @@
+//一些FA通用定义
 #pragma once
 #include <set>
 using state_t = unsigned;

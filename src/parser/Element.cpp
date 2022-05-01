@@ -8,6 +8,7 @@ std::unordered_set<Element> Element::terminalSet{Element::emptyElement,Element::
 std::unordered_set<Element> Element::noTerminalSet;
 
 Element::Element(const string& v){
+    //处理特殊,空与终结符
     if(v.size()==1){
         if(v.front()==endElement.value.front()){
             this->kind = endElement.kind;
@@ -20,7 +21,7 @@ Element::Element(const string& v){
         return;
     }
     const char op = v.at(0);
-    this->value = v.substr(1, v.size()-2);
+    this->value = v.substr(1, v.size()-2);//其余情况的value都是去掉首尾的输入
     if(op == '<'){
         this->kind = noTerminal;
         noTerminalSet.emplace(*this);
@@ -38,7 +39,10 @@ Element::Element(const string& v){
 Element::Element(const Kind k, const string& v)
     :kind(k),value(v)    
 {
-
+    if(k==noTerminal)
+        noTerminalSet.emplace(*this);
+    else
+        terminalSet.emplace(*this);
 }
 
 bool Element::operator==(const Token& t)const{

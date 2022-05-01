@@ -10,10 +10,12 @@ using std::string;
 using std::endl;
 
 DFA::DFA(const NFA& nfa){
+    //this->nodes表示已构造完成的DFA状态
     
+    //为所有出现的nfa状态集合编号,作为DFA状态号
     map<StateSet, state_t> toDFAState;
     state_t nxtDFAState = 0;
-    queue<StateSet> que;
+    queue<StateSet> que;//宽搜队列
     que.emplace(NFA::GetEpCloure(nfa.head));
 
     toDFAState.emplace(que.front(), nxtDFAState);
@@ -48,7 +50,7 @@ DFA::DFA(const NFA& nfa){
 }
 
 std::ostream& operator<<(std::ostream& os, const DFA& dfa){
-    
+    os << "start state:" << dfa.start << endl;
     for (auto &&node : dfa.nodes)
     {
         os << node.first << ' ' << (node.second.isEnd?"true":"false") << endl;
@@ -64,11 +66,13 @@ std::ostream& operator<<(std::ostream& os, const DFA& dfa){
 unsigned DFA::Match(const string& txt) const{
     state_t nowState(start);
 
-    unsigned ret = 0;
+    unsigned ret = 0;//最后达到的接受态的路径长度
     for (unsigned i = 0; i < txt.size(); ++i) {
         const auto& edges = nodes.at(nowState).edges;
+        //如当前状态有txt[i]对应出边
         if (edges.contains(txt[i])) {
             nowState = edges.at(txt[i]);
+            //更新接受态
             if (nodes.at(nowState).isEnd)
                 ret = i + 1;
         }

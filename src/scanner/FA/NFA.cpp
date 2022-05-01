@@ -3,7 +3,6 @@
 #include <ostream>
 #include "NFA.h"
 
-
 using std::stack;
 using std::string;
 using std::queue;
@@ -29,21 +28,20 @@ NFA::NFA(){
     statePool.push_back(std::move(state2));
 }
 
-//开优化后函数功能错误，不知道是哪里ub了
 NFA NFA::CreateNFAFromRegex(const string& suffixPattern){
     const string& s(suffixPattern);//just for short name
     stack<NFA> nfa_stack;
 
     for(string::size_type i=0;i<s.size(); ++i){
-        if(controls.find(s[i])==string::npos)
+        if(controls.find(s[i])==string::npos)//非控制符则创建一个新NFA
             nfa_stack.emplace(s[i]);
-        else if(s[i]=='\\')
+        else if(s[i]=='\\')//处理转义
             nfa_stack.emplace(s[++i]);
-        else if(s[i]=='*'){
+        else if(s[i]=='*'){//闭包运算则向栈顶nfa首尾加入互相空转移
             NFA n(nfa_stack.top());
             n.Head().AddEpTrans(n.Tail());
             n.Tail().AddEpTrans(n.Head());
-        }else if(s[i]=='|'){
+        }else if(s[i]=='|'){//或运算则构造一个新nfa空转移至栈顶的两个nfa
             NFA n1(nfa_stack.top());
             nfa_stack.pop();
             NFA n2(nfa_stack.top());
@@ -56,7 +54,7 @@ NFA NFA::CreateNFAFromRegex(const string& suffixPattern){
             n2.Tail().AddEpTrans(n.Tail());
 
             nfa_stack.push(std::move(n));
-        }else if(s[i] == '&'){
+        }else if(s[i] == '&'){//链接符连接栈顶两nfa
             NFA n2(nfa_stack.top());
             nfa_stack.pop();
             NFA n1(nfa_stack.top());
@@ -65,16 +63,16 @@ NFA NFA::CreateNFAFromRegex(const string& suffixPattern){
             n1.Tail().AddEpTrans(n2.Head());
             n1.tail = n2.tail;
             nfa_stack.push(std::move(n1));
-        }else if(s[i] == '+'){
+        }else if(s[i] == '+'){//向栈顶nfa的尾结点加入到头结点的空转移
             NFA n(nfa_stack.top());
             n.Tail().AddEpTrans(n.Head());
-        }else if(s[i] == '?'){
+        }else if(s[i] == '?'){//向栈顶nfa的头结点加入到尾结点的空转移
             NFA n(nfa_stack.top());
             n.Head().AddEpTrans(n.Tail());
         }
     }
 
-    return nfa_stack.top();
+    return nfa_stack.top();//最后的栈顶nfa就是最终nfa
 }
 
 NFAState& NFA::Head() const{
@@ -95,6 +93,7 @@ NFAState& NFA::operator[](const state_t state) const{
 
 StateSet NFA::GetEpCloure(const state_t state){
     StateSet ret;
+    //宽搜..又是宽搜...
     queue<state_t> que;
     que.push(state);
     while(!que.empty()){
@@ -112,6 +111,7 @@ StateSet NFA::GetEpCloure(const state_t state){
 }
 
 StateSet NFA::GetEpCloure(const StateSet& stateSet){
+    //更上一个不能说十分相似,只能说一毛一样
     StateSet ret;
     queue<state_t> que;
     for(const auto s:stateSet)
@@ -131,6 +131,7 @@ StateSet NFA::GetEpCloure(const StateSet& stateSet){
 }
 
 void NFA::Combine(NFA& other){
+    //同CreateNFAFromRegex中对或运算的处理
     NFA n;
     n.Head().AddEpTrans(this->Head());
     n.Head().AddEpTrans(other.Head());

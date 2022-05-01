@@ -3,13 +3,19 @@
 #include "DFA.h"
 #include <iostream>
 #include <fstream>
+#include <vector>
 using std::string;
 using std::cout;
 using std::endl;
 using std::ifstream;
 using std::getline;
 
+std::vector<std::vector<state_t>>actGotoTable;
 
+//由dfa构造action_goto表
+void BuildTable(const DFA& dfa){
+    
+}
 
 int main(void){    
     ifstream grammar_file("grammar.txt");
