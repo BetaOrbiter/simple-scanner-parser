@@ -1,3 +1,4 @@
+#include <ostream>
 #include "Item.h"
 
 using std::unordered_set;
@@ -37,4 +38,10 @@ Project& Item::GetProject()const{
 }
 bool Item::IsReachLast()const{
     return GetProject().right.size() <= dotPos;
+}
+
+using std::endl;
+std::ostream& operator<<(std::ostream& os, const Item& item){
+    os << item.GetProject() << " " << item.dotPos << " " << item.lookAhead;
+    return os;
 }

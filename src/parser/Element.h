@@ -10,6 +10,7 @@ struct Element{
     static std::unordered_set<Element> noTerminalSet;
     static const Element emptyElement;    
     static const Element endElement;
+    
     Kind kind;
     std::string value;
 
@@ -18,7 +19,9 @@ struct Element{
     bool operator==(const Element& e) const{
         return (this->kind==e.kind)&&(this->value==e.value);
     }
-    bool operator==(const Token& t);
+    bool operator==(const Token& t) const;
+    
+    friend std::ostream& operator<<(std::ostream& os, const Element& e);
 };
 namespace std {
     template <>

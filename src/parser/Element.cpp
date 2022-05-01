@@ -1,3 +1,4 @@
+#include <ostream>
 #include "Element.h"
 using std::string;
 
@@ -40,7 +41,7 @@ Element::Element(const Kind k, const string& v)
 
 }
 
-bool Element::operator==(const Token& t){
+bool Element::operator==(const Token& t)const{
     if(kind == noTerminal)
         return false;
     else if(kind == terminal)
@@ -50,6 +51,10 @@ bool Element::operator==(const Token& t){
     else if(kind == empty)
         return false;
     else if(kind == end)
-        return t.type=="end";
+        return t.type=="end" && t.type=="$";
     return false;
 };
+
+std::ostream& operator<<(std::ostream& os, const Element& e){
+    return os << e.value;
+}

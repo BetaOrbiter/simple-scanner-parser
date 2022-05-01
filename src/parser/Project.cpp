@@ -2,6 +2,7 @@
 #include <regex>
 #include <unordered_set>
 #include <algorithm>
+#include <ostream>
 using std::string;
 using std::vector;
 using std::unordered_set;
@@ -133,4 +134,11 @@ bool Project::IsEmpty(const project_t p){
 
 bool Project::CanEmpty(const Element& e){
     return first.at(e).contains(Element::emptyElement);
+}
+
+std::ostream& operator<<(std::ostream& os, const Project& proj){
+    os << proj.left << ":=";
+    for(const auto&e:proj.right)
+        os << e;
+    return os;
 }

@@ -2,6 +2,7 @@
 #include <unordered_set>
 #include <vector>
 #include <queue>
+#include <ostream>
 #include "DFA.h"
 #include "State.h"
 
@@ -53,4 +54,20 @@ DFA::DFA(const Item& start_item){
         }
         nodes[toNum.at(now)].items =std::move(now.items);
     }
+}
+
+using std::endl;
+std::ostream& operator<<(std::ostream& os, const DFA& dfa){
+    os << "start state:" << dfa.start << endl<<endl;
+    for(const auto& node:dfa.nodes){
+        os << "state:" << node.first << endl;
+        for(const auto& i:node.second.items){
+            os << i << endl;
+        }
+        for(const auto& edge:node.second.edges){
+            os << "on " << edge.first << " to " << edge.second << endl;
+        }
+        os << endl;
+    }
+    return os;
 }

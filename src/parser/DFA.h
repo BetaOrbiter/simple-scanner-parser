@@ -12,5 +12,6 @@ struct DFANode{
 struct DFA{
     std::unordered_map<state_t, DFANode> nodes;
     state_t start;
-    DFA(const Item& start_item);
+    explicit DFA(const Item& start_item);
+    friend std::ostream& operator<<(std::ostream& os, const DFA& dfa);
 };

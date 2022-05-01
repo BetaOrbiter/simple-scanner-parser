@@ -32,6 +32,7 @@ struct Project{
     //符号到first集合的映射
     static std::unordered_map<Element,std::unordered_set<Element>> first;
 
+    friend std::ostream& operator<<(std::ostream& os, const Project& proj);
 private:
     const static std::regex projectFormat;
     //快速获取左部相同句法

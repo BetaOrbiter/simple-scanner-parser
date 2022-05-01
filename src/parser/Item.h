@@ -18,6 +18,8 @@ struct Item{
     Project& GetProject()const;
     Item(const Project::project_t idx, const unsigned dot_pos, const Element& look_ahead);
     Item();
+
+    friend std::ostream& operator<<(std::ostream& os, const Item& item);
 };
 
 namespace std {
