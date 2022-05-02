@@ -5,7 +5,6 @@
 #include <fstream>
 #include <vector>
 #include <format>
-#include <utility>
 
 using std::format;
 using std::string;
@@ -15,9 +14,10 @@ using std::ifstream;
 using std::getline;
 using std::pair;
 
-std::vector<std::vector<state_t>>gotoTable;
-std::vector<pair<bool,Project::project_t>> actionTable;//同dfaNode中的action、hand字段
-std::unordered_map<Element, int> toColumn;//符号到goto表列数的映射
+static std::vector<std::vector<state_t>>gotoTable;
+static std::vector<pair<bool,Project::project_t>> actionTable;//同dfaNode中的action、hand字段
+static std::unordered_map<Element, int> toColumn;//符号到goto表列数的映射
+static Token nxt_token;
 
 //由dfa构造action_goto表,各列顺序与[Element::TerminalSet : Element::noterminalSet]顺序相同
 static void BuildTable(const DFA& dfa){
@@ -140,11 +140,11 @@ static bool Parse(std::string_view token_file_name,const state_t start, std::ost
         }else{//shift过程
             string token_line;
             getline(token_file, token_line);
-            Token token(token_line);
+            nxt_token = Token(token_line);
             Element match("$");
             //寻找可与token匹配的element
             for(const auto&e:Element::terminalSet)
-                if(e == token)
+                if(e == nxt_token)
                     match = e;
             
             state_stack.push_back(gotoTable.at(now_state).at(toColumn.at(match)));
@@ -192,6 +192,10 @@ int main(void){
 
     //解析
     std::ofstream process_file("process.txt");
-    process_file << (Parse("token.txt", dfa.start, process_file)?"acc":"err") << endl;
+    bool result = Parse("token.txt",dfa.start, process_file);
+    if(result)
+        process_file << "Accept!";
+    else
+        process_file << format("Error in line {},token type:{} value:{}",nxt_token.line, nxt_token.type, nxt_token.value);
     return 0;
 }

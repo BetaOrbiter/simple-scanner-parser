@@ -16,6 +16,7 @@
 <statement>:=#return#<expersion>#;#
 <assignment_statement>:=<declaration_expersion>%assignment_operator%<simple_exp>
 <assignment_statement>:=%identifier%%assignment_operator%<simple_exp>
+<assignment_statement>:=%identifier%%unary_operation%
 <expersion>:=<expersion>%binary_operation%<simple_exp>
 <expersion>:=<simple_exp>
 <simple_exp>:=#(#<expersion>#)#
@@ -28,3 +29,4 @@
 <call_statement>:=%identifier%#(#<arguments>#)#
 <arguments>:=<arguments>#,#%identifier%
 <arguments>:=%identifier%
+<arguments>:=@
