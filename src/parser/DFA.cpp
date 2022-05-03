@@ -59,23 +59,37 @@ DFA::DFA(const Item& start_item){
 }
 
 void DFANode::SetKind(){
-    if(!edges.empty()){
-        action = shift;
-        return;
-    }
-    action = reduce;
+    int reduce_item_count=0,shitf_item_count=0;//规约、移进项数量
+    Project::project_t reduce_hand = -1;//用什么句法规约
     for(const auto&i:items)
         if(i.IsReachLast()){
-            hand = i.projectIdx;
-            return;
+            if(reduce_hand==-1)
+                reduce_hand = i.projectIdx;
+            if(reduce_hand != i.projectIdx){
+                //进入该if证明存在不同心的规约项，直接判为归约-归约冲突
+                this->action = rr_conflict;
+                return;
+            }
+            reduce_item_count++;
+        }else{
+            shitf_item_count++;
         }
+    this->hand = reduce_hand;
+
+    //归约-归约冲突已在前文处理
+    if(shitf_item_count==0)
+        this->action = Action::reduce;
+    else if(reduce_item_count==0)
+        this->action = Action::shitf;
+    else
+        this->action = Action::sr_conflict;
 }
 
 using std::endl;
 std::ostream& operator<<(std::ostream& os, const DFA& dfa){
     os << "start state:" << dfa.start << endl<<endl;
     for(const auto& node:dfa.nodes){
-        os << "state:" << node.first << endl;
+        os << "state:" << node.first << " action:" << actionStrings[node.second.action] << endl;
         for(const auto& i:node.second.items){
             os << i << endl;
         }
